@@ -1,8 +1,8 @@
 "use strict";
 import {define, factory, IFactory, inject, singleton} from '@appolo/inject';
 import {ILogger} from "@appolo/logger";
-import {IOptions} from "../index";
 import mysql = require('mysql2/promise');
+import {IOptions} from "./IOptions";
 
 
 @define()
@@ -16,7 +16,7 @@ export class MysqlClient implements IFactory<mysql.Connection> {
     public async get(): Promise<mysql.Connection> {
 
         try {
-            let conn = await mysql.createConnection(this.moduleOptions.config || this.moduleOptions.connection);
+            let conn = await mysql.createConnection(this.moduleOptions.config || this.moduleOptions.connection as any);
 
             conn.on('error', (err) => {
                 this.logger.error("memsql connection error" + err.toString());
