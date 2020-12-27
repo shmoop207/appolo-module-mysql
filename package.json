@@ -1,6 +1,6 @@
 {
   "name": "@appolo/mysql",
-  "version": "8.0.1",
+  "version": "8.0.2",
   "description": "",
   "private": false,
   "keywords": [],
@@ -9,8 +9,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@appolo/logger": "^8.0.5",
     "@appolo/engine": "^8.0.19",
+    "@appolo/logger": "^8.0.5",
+    "@appolo/utils": "^8.0.7",
     "mysql2": "^2.2.5"
   },
   "devDependencies": {

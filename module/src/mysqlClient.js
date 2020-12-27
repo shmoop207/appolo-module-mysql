@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MysqlClient = void 0;
 const tslib_1 = require("tslib");
 const inject_1 = require("@appolo/inject");
-const mysql = require("mysql2/promise");
+const mysql = require("mysql2");
 let MysqlClient = class MysqlClient {
     async get() {
         try {
-            let conn = await mysql.createConnection(this.moduleOptions.config || this.moduleOptions.connection);
+            let conn = mysql.createConnection(this.moduleOptions.config || this.moduleOptions.connection);
             conn.on('error', (err) => {
                 this.logger.error("memsql connection error" + err.toString());
                 process.exit(1);
@@ -16,7 +16,7 @@ let MysqlClient = class MysqlClient {
                 this.logger.error("memsql connection end" + err.toString());
                 process.exit(1);
             });
-            await conn.connect();
+            await conn.promise().connect();
             this.logger.info(`connected to mysql ${this.moduleOptions.id}`);
             return conn;
         }

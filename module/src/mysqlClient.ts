@@ -1,8 +1,9 @@
 "use strict";
 import {define, factory, IFactory, inject, singleton} from '@appolo/inject';
 import {ILogger} from "@appolo/logger";
-import mysql = require('mysql2/promise');
+import mysql = require('mysql2');
 import {IOptions} from "./IOptions";
+import {Promises} from "@appolo/utils";
 
 
 @define()
@@ -16,7 +17,7 @@ export class MysqlClient implements IFactory<mysql.Connection> {
     public async get(): Promise<mysql.Connection> {
 
         try {
-            let conn = await mysql.createConnection(this.moduleOptions.config || this.moduleOptions.connection as any);
+            let conn =  mysql.createConnection(this.moduleOptions.config || this.moduleOptions.connection as any);
 
             conn.on('error', (err) => {
                 this.logger.error("memsql connection error" + err.toString());
@@ -28,7 +29,7 @@ export class MysqlClient implements IFactory<mysql.Connection> {
                 process.exit(1);
             });
 
-            await conn.connect();
+            await conn.promise().connect();
 
             this.logger.info(`connected to mysql ${this.moduleOptions.id}`);
 

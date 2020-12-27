@@ -8,7 +8,10 @@ let MysqlProvider = class MysqlProvider {
         return this.mysqlClient;
     }
     query(sql, values) {
-        return this.mysqlClient.query(sql, values);
+        return this.mysqlClient.promise().query(sql, values);
+    }
+    queryStream(sql, values, callback) {
+        return this.mysqlClient.query(sql, values, callback);
     }
 };
 tslib_1.__decorate([
