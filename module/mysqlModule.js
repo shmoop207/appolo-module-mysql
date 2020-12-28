@@ -23,4 +23,4 @@ MySqlModule = MySqlModule_1 = tslib_1.__decorate([
     engine_1.module({ exports: [mysqlClient_1.MysqlClient] })
 ], MySqlModule);
 exports.MySqlModule = MySqlModule;
-//# sourceMappingURL=mySqlModule.js.map
+//# sourceMappingURL=mysqlModule.js.map
