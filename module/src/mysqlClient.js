@@ -4,10 +4,21 @@ exports.MysqlClient = void 0;
 const tslib_1 = require("tslib");
 const inject_1 = require("@appolo/inject");
 const mysql = require("mysql2");
+const url_1 = require("url");
 let MysqlClient = class MysqlClient {
     async get() {
         try {
-            let conn = mysql.createConnection(this.moduleOptions.config || this.moduleOptions.connection);
+            let config;
+            if (this.moduleOptions.connection) {
+                config = this._parseUrl(this.moduleOptions.connection);
+            }
+            if (this.moduleOptions.config) {
+                config = this.moduleOptions.config;
+            }
+            if (!config) {
+                throw new Error("failed to get mysql config");
+            }
+            let conn = mysql.createConnection(config);
             conn.on('error', (err) => {
                 this.logger.error("memsql connection error" + err.toString());
                 process.exit(1);
@@ -25,17 +36,38 @@ let MysqlClient = class MysqlClient {
             throw e;
         }
     }
+    _parseUrl(url) {
+        const parsedUrl = new url_1.URL(url);
+        const options = {
+            host: parsedUrl.hostname,
+            port: parseInt(parsedUrl.port),
+            database: parsedUrl.pathname.substr(1),
+            user: decodeURI(parsedUrl.username),
+            password: decodeURI(parsedUrl.password)
+        };
+        parsedUrl.searchParams.forEach((value, key) => {
+            try {
+                // Try to parse this as a JSON expression first
+                options[key] = JSON.parse(value);
+            }
+            catch (err) {
+                // Otherwise assume it is a plain string
+                options[key] = value;
+            }
+        });
+        return options;
+    }
 };
-tslib_1.__decorate([
-    inject_1.inject()
+(0, tslib_1.__decorate)([
+    (0, inject_1.inject)()
 ], MysqlClient.prototype, "logger", void 0);
-tslib_1.__decorate([
-    inject_1.inject()
+(0, tslib_1.__decorate)([
+    (0, inject_1.inject)()
 ], MysqlClient.prototype, "moduleOptions", void 0);
-MysqlClient = tslib_1.__decorate([
-    inject_1.define(),
-    inject_1.singleton(),
-    inject_1.factory()
+MysqlClient = (0, tslib_1.__decorate)([
+    (0, inject_1.define)(),
+    (0, inject_1.singleton)(),
+    (0, inject_1.factory)()
 ], MysqlClient);
 exports.MysqlClient = MysqlClient;
 //# sourceMappingURL=mysqlClient.js.map

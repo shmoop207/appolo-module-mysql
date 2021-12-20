@@ -4,6 +4,8 @@ import {ILogger} from "@appolo/logger";
 import mysql = require('mysql2');
 import {IOptions} from "./IOptions";
 import {Promises} from "@appolo/utils";
+import {URL} from "url";
+import {ConnectionOptions} from "mysql2";
 
 
 @define()
@@ -17,7 +19,22 @@ export class MysqlClient implements IFactory<mysql.Connection> {
     public async get(): Promise<mysql.Connection> {
 
         try {
-            let conn =  mysql.createConnection(this.moduleOptions.config || this.moduleOptions.connection as any);
+
+            let config: ConnectionOptions;
+
+            if (this.moduleOptions.connection) {
+                config = this._parseUrl(this.moduleOptions.connection);
+            }
+
+            if (this.moduleOptions.config) {
+                config = this.moduleOptions.config;
+            }
+
+            if (!config) {
+                throw new Error("failed to get mysql config")
+            }
+
+            let conn = mysql.createConnection(config);
 
             conn.on('error', (err) => {
                 this.logger.error("memsql connection error" + err.toString());
@@ -44,5 +61,26 @@ export class MysqlClient implements IFactory<mysql.Connection> {
         }
 
 
+    }
+
+    private _parseUrl(url: string): ConnectionOptions {
+        const parsedUrl = new URL(url);
+        const options: ConnectionOptions = {
+            host: parsedUrl.hostname,
+            port: parseInt(parsedUrl.port),
+            database: parsedUrl.pathname.substr(1),
+            user: decodeURI(parsedUrl.username),
+            password: decodeURI(parsedUrl.password)
+        };
+        parsedUrl.searchParams.forEach((value, key) => {
+            try {
+                // Try to parse this as a JSON expression first
+                options[key] = JSON.parse(value);
+            } catch (err) {
+                // Otherwise assume it is a plain string
+                options[key] = value;
+            }
+        });
+        return options;
     }
 }

@@ -14,12 +14,12 @@ let MysqlProvider = class MysqlProvider {
         return this.mysqlClient.query(sql, values, callback);
     }
 };
-tslib_1.__decorate([
-    inject_1.inject()
+(0, tslib_1.__decorate)([
+    (0, inject_1.inject)()
 ], MysqlProvider.prototype, "mysqlClient", void 0);
-MysqlProvider = tslib_1.__decorate([
-    inject_1.define(),
-    inject_1.singleton()
+MysqlProvider = (0, tslib_1.__decorate)([
+    (0, inject_1.define)(),
+    (0, inject_1.singleton)()
 ], MysqlProvider);
 exports.MysqlProvider = MysqlProvider;
 //# sourceMappingURL=mysqlProvider.js.map
