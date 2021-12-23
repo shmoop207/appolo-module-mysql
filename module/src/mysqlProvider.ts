@@ -1,4 +1,5 @@
 import {define, factory, IFactory, inject, singleton} from '@appolo/inject';
+import {Promises} from '@appolo/utils';
 import {
     Connection,
     FieldPacket,
@@ -32,5 +33,25 @@ export class MysqlProvider {
         callback?: (err: QueryError | null, result: T, fields: FieldPacket[]) => any
     ): Query {
         return this.mysqlClient.query(sql as string, values, callback)
+    }
+
+    public createQuery<T extends RowDataPacket[][] | RowDataPacket[] | OkPacket | OkPacket[] | ResultSetHeader>(
+        sql: string | QueryOptions,
+        values?: any | any[] | { [param: string]: any },
+        callback?: (err: QueryError | null, result: T, fields: FieldPacket[]) => any
+    ): Query {
+        return this.mysqlClient.query(sql as string, values, callback)
+    }
+
+    public beginTransaction() {
+        return this.mysqlClient.promise().beginTransaction()
+    }
+
+    public commit() {
+        return this.mysqlClient.promise().commit()
+    }
+
+    public rollback() {
+        return this.mysqlClient.promise().rollback()
     }
 }

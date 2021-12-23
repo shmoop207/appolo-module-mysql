@@ -13,6 +13,18 @@ let MysqlProvider = class MysqlProvider {
     queryStream(sql, values, callback) {
         return this.mysqlClient.query(sql, values, callback);
     }
+    createQuery(sql, values, callback) {
+        return this.mysqlClient.query(sql, values, callback);
+    }
+    beginTransaction() {
+        return this.mysqlClient.promise().beginTransaction();
+    }
+    commit() {
+        return this.mysqlClient.promise().commit();
+    }
+    rollback() {
+        return this.mysqlClient.promise().rollback();
+    }
 };
 (0, tslib_1.__decorate)([
     (0, inject_1.inject)()
