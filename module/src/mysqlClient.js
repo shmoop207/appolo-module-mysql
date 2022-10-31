@@ -9,27 +9,49 @@ let MysqlClient = class MysqlClient {
     async get() {
         try {
             let config;
+            let isPool;
             if (this.moduleOptions.connection) {
                 config = this._parseUrl(this.moduleOptions.connection);
             }
             if (this.moduleOptions.config) {
-                config = this.moduleOptions.config;
+                config = Object.assign({}, config, this.moduleOptions.config);
+            }
+            if (this.moduleOptions.pool) {
+                config = Object.assign({}, config, this.moduleOptions.pool);
+                isPool = true;
             }
             if (!config) {
                 throw new Error("failed to get mysql config");
             }
-            let conn = mysql.createConnection(config);
-            conn.on('error', (err) => {
-                this.logger.error("memsql connection error" + err.toString());
-                process.exit(1);
-            });
-            conn.on('end', (err) => {
-                this.logger.error("memsql connection end" + err.toString());
-                process.exit(1);
-            });
-            await conn.promise().connect();
-            this.logger.info(`connected to mysql ${this.moduleOptions.id}`);
-            return conn;
+            if (isPool) {
+                let conn = mysql.createPool(config);
+                conn.on('error', (err) => {
+                    this.logger.error("memsql connection error" + err.toString());
+                    process.exit(1);
+                });
+                conn.on('end', (err) => {
+                    this.logger.error("memsql connection end" + err.toString());
+                    process.exit(1);
+                });
+                let connTest = await conn.promise().getConnection();
+                connTest.release();
+                this.logger.info(`connected to mysql ${this.moduleOptions.id}`);
+                return conn;
+            }
+            else {
+                let conn = mysql.createConnection(config);
+                conn.on('error', (err) => {
+                    this.logger.error("memsql connection error" + err.toString());
+                    process.exit(1);
+                });
+                conn.on('end', (err) => {
+                    this.logger.error("memsql connection end" + err.toString());
+                    process.exit(1);
+                });
+                await conn.promise().connect();
+                this.logger.info(`connected to mysql ${this.moduleOptions.id}`);
+                return conn;
+            }
         }
         catch (e) {
             this.logger.error(`failed to connect to mysql ${this.moduleOptions.id}`, { err: e.toString() });

@@ -1,7 +1,8 @@
-import {ConnectionOptions} from "mysql2";
+import {ConnectionOptions, PoolOptions} from "mysql2";
 
 export interface IOptions {
     connection?: string,
     id?: string,
-    config?: ConnectionOptions
+    config?: ConnectionOptions,
+    pool?: PoolOptions
 }
