@@ -3,7 +3,7 @@ import {MysqlClient} from "./src/mysqlClient";
 import {MysqlProvider} from "./src/mysqlProvider";
 import {IOptions} from "./src/IOptions";
 
-@module({exports: [MysqlClient]})
+@module()
 export class MySqlModule extends Module<IOptions> {
 
     public get defaults(): Partial<IOptions> {

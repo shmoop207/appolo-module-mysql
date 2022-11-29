@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MySqlModule = void 0;
 const tslib_1 = require("tslib");
 const engine_1 = require("@appolo/engine");
-const mysqlClient_1 = require("./src/mysqlClient");
 const mysqlProvider_1 = require("./src/mysqlProvider");
 let MySqlModule = MySqlModule_1 = class MySqlModule extends engine_1.Module {
     get defaults() {
@@ -20,7 +19,7 @@ let MySqlModule = MySqlModule_1 = class MySqlModule extends engine_1.Module {
     }
 };
 MySqlModule = MySqlModule_1 = (0, tslib_1.__decorate)([
-    (0, engine_1.module)({ exports: [mysqlClient_1.MysqlClient] })
+    (0, engine_1.module)()
 ], MySqlModule);
 exports.MySqlModule = MySqlModule;
 //# sourceMappingURL=mysqlModule.js.map
