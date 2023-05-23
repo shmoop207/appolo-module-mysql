@@ -3,13 +3,12 @@ import {Promises} from '@appolo/utils';
 import {
     Connection,
     FieldPacket,
-    OkPacket,
     QueryOptions,
-    ResultSetHeader,
     RowDataPacket,
     Query,
     QueryError
 } from "mysql2";
+import {OkPacket} from "./interfaces";
 
 @define()
 @singleton()
@@ -20,27 +19,27 @@ export class MysqlProvider {
         return this.mysqlClient;
     }
 
-    public query<T extends RowDataPacket[][] | RowDataPacket[] | OkPacket | OkPacket[] | ResultSetHeader>(
+    public query<T extends { [index: string]: any }>(
         sql: string | QueryOptions,
         values?: any | any[] | { [param: string]: any }
-    ): Promise<[T, FieldPacket[]]> {
-        return this.mysqlClient.promise().query(sql as string, values)
+    ): Promise<[T[], FieldPacket[]]> {
+        return this.mysqlClient.promise().query<any>(sql as string, values)
     }
 
-    public queryStream<T extends RowDataPacket[][] | RowDataPacket[] | OkPacket | OkPacket[] | ResultSetHeader>(
+    public queryStream<T extends { [index: string]: any }>(
         sql: string | QueryOptions,
         values?: any | any[] | { [param: string]: any },
         callback?: (err: QueryError | null, result: T, fields: FieldPacket[]) => any
     ): Query {
-        return this.mysqlClient.query(sql as string, values, callback)
+        return this.mysqlClient.query<any>(sql as string, values, callback)
     }
 
-    public createQuery<T extends RowDataPacket[][] | RowDataPacket[] | OkPacket | OkPacket[] | ResultSetHeader>(
+    public createQuery<T extends { [index: string]: any }>(
         sql: string | QueryOptions,
         values?: any | any[] | { [param: string]: any },
         callback?: (err: QueryError | null, result: T, fields: FieldPacket[]) => any
     ): Query {
-        return this.mysqlClient.query(sql as string, values, callback)
+        return this.mysqlClient.query<any>(sql as string, values, callback)
     }
 
     public beginTransaction() {

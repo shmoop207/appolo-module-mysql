@@ -26,10 +26,10 @@ let MysqlProvider = class MysqlProvider {
         return this.mysqlClient.promise().rollback();
     }
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, inject_1.inject)()
 ], MysqlProvider.prototype, "mysqlClient", void 0);
-MysqlProvider = (0, tslib_1.__decorate)([
+MysqlProvider = tslib_1.__decorate([
     (0, inject_1.define)(),
     (0, inject_1.singleton)()
 ], MysqlProvider);

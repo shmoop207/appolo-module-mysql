@@ -80,13 +80,13 @@ let MysqlClient = class MysqlClient {
         return options;
     }
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, inject_1.inject)()
 ], MysqlClient.prototype, "logger", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, inject_1.inject)()
 ], MysqlClient.prototype, "moduleOptions", void 0);
-MysqlClient = (0, tslib_1.__decorate)([
+MysqlClient = tslib_1.__decorate([
     (0, inject_1.define)(),
     (0, inject_1.singleton)(),
     (0, inject_1.factory)()
